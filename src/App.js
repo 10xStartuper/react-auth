@@ -16,7 +16,7 @@ const App = () => {
           {token ? (
             <Route exact path="/" element={<HomePage />} />
           ) : (
-            <Route exact path="/" element={<LoginPage />} />
+            <Route exact path="/" element={<LoginPage setToken={setToken} />} />
           )}
         </Routes>
       </Router>

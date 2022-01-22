@@ -1,21 +1,41 @@
-import { useRef, useEffect } from "react";
+import { useRef, useState } from "react";
 import http from "../../services/http/";
 
-const Login = () => {
+const Login = ({ setToken }) => {
+  const loginInput = useRef(null);
+  const passwordInput = useRef(null);
+
   const onLogin = (e) => {
     e.preventDefault(); //Preventing auto reload
 
-    const loggerStyle =
-      "color: white; padding: 5px 8px; font-size: 20px; text-transform: uppercase; background: #00c300;";
-    console.log("%c Submit!!!", loggerStyle);
+    const loggerStyle = `
+      color: white; 
+      padding: 5px 8px; 
+      font-size: 20px; 
+      text-transform: uppercase; 
+      background: #00c300;
+    `;
+    console.log(
+      `%c\nLogin: ${loginInput.current.value}\nPassword: ${passwordInput.current.value}`,
+      loggerStyle
+    );
 
     http
       .post("/login", {
-        email: "test@example.com",
-        password: "testPasscode",
+        email: loginInput.current.value,
+        password: passwordInput.current.value,
       })
-      .then((res) => console.log(res));
+      .then((res) => {
+        console.log(res.data);
+        setToken(res.data.token);
+        window.localStorage.setItem("token", res.data.token);
+      })
+      .catch((err) => {
+        setHasError(true);
+      });
   };
+
+  const [hasError, setHasError] = useState(false);
 
   return (
     <div className="container">
@@ -27,11 +47,17 @@ const Login = () => {
               <h2>Login</h2>
             </div>
             <form className="card-body" onSubmit={onLogin}>
+              {hasError && (
+                <div className="alert alert-danger" role="alert">
+                  Error occured while logging in, please try again!
+                </div>
+              )}
               <div className="mb-3">
                 <label htmlFor="exampleInputEmail1" className="form-label">
                   Email address
                 </label>
                 <input
+                  ref={loginInput}
                   type="email"
                   className="form-control"
                   id="exampleInputEmail1"
@@ -46,6 +72,7 @@ const Login = () => {
                   Password
                 </label>
                 <input
+                  ref={passwordInput}
                   type="password"
                   className="form-control"
                   id="exampleInputPassword1"
