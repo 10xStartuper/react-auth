@@ -5,7 +5,7 @@ import { Suspense } from "react/cjs/react.production.min";
 
 const HomePage = lazy(() => import("./pages/Home/Home"));
 const LoginPage = lazy(() => import("./pages/Auth/Login"));
-const RegisterPage = lazy(() => import("./pages/Auth/Register"));
+// const RegisterPage = lazy(() => import("./pages/Auth/Register"));
 
 const App = () => {
   const [token, setToken] = useState(window.localStorage.getItem("token"));
